@@ -5,6 +5,7 @@
 {% load plugins %}
 {% load i18n %}
 {% load mptt %}
+{% load form_helpers %}
 
 {% block content %}
   <div class="row">
@@ -150,4 +151,37 @@
       {% plugin_full_width_page object %}
     </div>
   </div>
+
+  {% if assign_device_form %}
+    <div class="modal" id="assignDeviceModal" tabindex="-1" aria-labelledby="assignDeviceModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <form method="post" action="">
+            {% csrf_token %}
+            <div class="modal-header">
+              <h5 class="modal-title" id="assignDeviceModalLabel">
+                {% trans "Assign Device to Rack" %}
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              {% render_form assign_device_form %}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+              <button type="submit" class="btn btn-primary">{% trans "Assign Device" %}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const assignDeviceModalEl = document.getElementById('assignDeviceModal');
+      new Modal(assignDeviceModalEl).show();
+      assignDeviceModalEl.addEventListener('hidden.bs.modal', () => {
+        window.history.replaceState({}, '', window.location.pathname);
+      });
+    </script>
+  {% endif %}
 {% endblock %}
